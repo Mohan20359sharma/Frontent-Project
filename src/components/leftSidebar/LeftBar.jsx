@@ -1,6 +1,15 @@
 import React, { useState } from 'react'
 
 const LeftBar = () => {
+    const stateCities = {
+        Delhi: ["New Delhi"],
+        Maharashtra: ["Mumbai", "Pune", "Nagpur"],
+        Karnataka: ["Bengaluru", "Mysuru", "Hubli"],
+        "Tamil Nadu": ["Chennai", "Coimbatore", "Madurai"],
+        "Uttar Pradesh": ["Lucknow", "Kanpur", "Agra"],
+        Gujarat: ["Ahmedabad", "Surat", "Vadodara"],
+        Rajasthan: ["Jaipur", "Jodhpur", "Udaipur"],
+    };
     
     const [formData, setFormData] = useState({
     companyName: "",
@@ -20,6 +29,12 @@ const LeftBar = () => {
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     setErrors({ ...errors, [e.target.name]: "" }); // error clear on type
+    const { name, value } = e.target;
+    if (name === "state") {
+      setFormData((prev) => ({ ...prev, city: "" })); // reset city on state change
+    }else {
+        setFormData((prev) => ({ ...prev, [name]: value }));
+    }
   };
 
   const validate = () => {
@@ -58,7 +73,7 @@ const LeftBar = () => {
     console.log("❌ Form Cancelled & Reset");
   };
   return (
-    <div className=" rounded-[10px] pt-[30px] px-[22px] w-full lg:w-[55%] h-fit bg-white" style={{background:"rgb(255,255,255)"}}>
+    <div className=" rounded-[10px] pt-[30px] px-[22px] w-full  lg:w-[55%] h-[680px] bg-white" style={{background:"rgb(255,255,255)"}}>
             <h1 className="text-2xl font-bold text-gray-900 mb-4">Review your details</h1>
             <h3 className="text-xl font-semibold text-gray-700 mb-4">Billing Information</h3>
             {submitted && (
@@ -187,16 +202,24 @@ const LeftBar = () => {
                         City
                     </label>
                     <select
+                        name="city"
+                        value={formData.city}
+                        onChange={handleChange}
                         className="w-full h-12 px-4 border border-gray-300 rounded-md bg-gray-50"
                     >
                             <option value="">Select city</option>
-                            <option>Mumbai</option>
+                            {formData.state && stateCities[formData.state]?.map((city) => (
+                                <option key={city} value={city}>
+                                    {city}
+                                </option>
+                            ))}
+                            {/* <option >Mumbai</option>
                             <option>Bengaluru</option>
                             <option>Delhi</option>
                             <option>Chennai</option>
                             <option>Lucknow</option>
                             <option>Ahmedabad</option>
-                            <option>Jaipur</option>
+                            <option>Jaipur</option> */}
 
                     </select>
                     {errors.city && <p className="text-red-500 text-xs mt-1">{errors.city}</p>}
